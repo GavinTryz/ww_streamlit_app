@@ -1,6 +1,8 @@
 import streamlit as st
+import random
+import time
 
-st.title("Echo bot")
+st.title("Simple chat")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -14,8 +16,20 @@ if prompt := st.chat_input("What is up?"):
         st.markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    response = f"Echo: {prompt}"
     with st.chat_message("assistant"):
-        st.markdown(response)
-    st.session_state.messages.append({"role":"assistant", "content": response})
+        message_placeholder = st.empty()
+        full_response = ""
+        assistant_response = random.choice(
+            [
+                "Hello there! How can I assist you today?",
+                "Hi, human! Is there anything I can help you with?",
+                "Do you need help?"
+            ]
+        )
+        for chunk in assistant_response.split():
+            full_response += chunk + " "
+            time.sleep(.05)
+            message_placeholder.markdown(full_response + "| ")
+        message_placeholder.markdown(full_response)
+    st.session_state.messages.append({"role":"assistant", "content": full_response})
 
